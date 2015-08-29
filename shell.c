@@ -170,20 +170,7 @@ size = pathconf(".",_PC_PATH_MAX) ;
      cpid  = fork() ;
     //int status ;
 
-    process1.next ;
-    process1.pid = getpid() ;
-   if(WIFSTOPPED(process1.status) != 0)
-    {
-       process1.stopped = 'T' ;
-    }
-    else
-     process1.stopped = 'F' ;
-    
-    
-if(WIFEXITED(process1.status) != 0)
- process1.completed = 'T' ;
-else
-process1.completed = 'F' ;
+   
 
 
 
@@ -214,9 +201,28 @@ process1.completed = 'F' ;
   
         if(pid==0)// parent
           {
-          
-           wait(NULL) ;
+
+    process process1 ;
+     process1.next ;
+     process1.pid = getpid() ;
+       wait(&process1.status) ;
            fprintf(stdout,"parent\n") ;
+
+        if(WIFSTOPPED(process1.status) != 0)
+    {
+          process1.stopped = 'T' ;
+    }
+        else
+          process1.stopped = 'F' ;
+    
+    
+if(WIFEXITED(process1.status) != 0)
+ process1.completed = 'T' ;
+else
+process1.completed = 'F' ;
+               
+
+
            }
         else if(pid>0)
             {
@@ -300,6 +306,22 @@ process1.completed = 'F' ;
 
                                 }
                                   
+                       }
+                   else if(countWord==4)
+                    {  char *c ; int k=0 ; int l=0 ;
+                        
+
+                        if(strcmp(test[2],">")==0)
+                             {
+                                    
+                              FILE *f = fopen(test[3], "w");
+                            dup2(fileno(f), STDOUT_FILENO) ;
+                               fclose(f) ;                             
+
+                               execv(t[0], test); 
+                                                                           
+                              }
+
                        }
                   
                  }
